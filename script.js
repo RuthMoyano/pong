@@ -8,16 +8,58 @@ const PADDLE_WIDTH = 20;
 
 // Size of the ball (in px)
 const BALL_SIZE = 20;
+let positionX = 100;
+let positionY = 100;
+let velocityX = 5;
+let velocityY = 5;
 
-// Get the computer paddle element
-const computerPaddle = document.querySelector('.computer-paddle');
+const ball = document.querySelector('.ball');
 
-// Initial computer paddle y-position and y-velocity
-let computerPaddleYPosition = 0;
-let computerPaddleYVelocity = 1;
+// Computer paddle variables
+const computer = document.querySelector('.computer-paddle');
+let computerPositionY = 100;
 
-// Update the pong world
+// Player paddle variables
+const player = document.querySelector('.player-paddle');
+let playerPositionY = 100;
+
 function update() {
+
+    positionX += velocityX;
+    positionY += velocityY;
+
+    computerPositionY = positionY;
+
+    if(positionY >= GAME_AREA_HEIGHT) {
+    velocityY = -velocityY;
+    } else if (positionY <= 0) {
+        velocityY = -velocityY;
+    } else if (
+        positionX <= 0 ||
+        positionX >= GAME_AREA_WIDTH - BALL_SIZE
+    ) {
+        positionX = 100;
+        positionY = 100;
+    }
+
+    if (
+        positionX >= GAME_AREA_WIDTH - BALL_SIZE - PADDLE_WIDTH &&
+        positionY >= computerPositionY - BALL_SIZE &&
+        positionY >= computerPositionY + PADDLE_HEIGHT
+    ) {
+        velocityX = -velocityX;
+    }
+
+    if (
+        positionX <= BALL_SIZE - PADDLE_WIDTH &&
+        positionY >= playerPositionY - BALL_SIZE &&
+        positionY <= playerPositionY + PADDLE_HEIGHT
+    ) {
+        velocityX = -velocityX;
+    }
+
+    ball.style.top = `${positionY}px`
+    ball.style.left = `${positionX}px`
 
     // Update the computer paddle's position
     computerPaddleYPosition = computerPaddleYPosition + computerPaddleYVelocity;
